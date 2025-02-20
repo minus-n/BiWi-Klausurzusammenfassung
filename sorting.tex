@@ -1,0 +1,89 @@
+% In this file we define the commands sort questions (or any 
+% other chunk of code) based on given key words
+
+\usepackage{environ}
+\usepackage{pgffor}
+
+\ExplSyntaxOn
+\makeatletter
+
+% Using this command we can sort a file with search indices:
+%
+%   \InputIgnoreFirstArg{‹sort index 1›}{‹file with content›}
+%   \InputIgnoreFirstArg{‹sort index 2›}{‹file with content›}
+%   ...
+%
+\newcommand{\InputIgnoreFirstArg}[2]{\input{#2}}
+
+% output streams for questions and the question index
+\newwrite\question
+\newwrite\questionindex
+\immediate\openout\questionindex=\jobname-question-index
+
+% keep track of current question count
+\newcounter{questions}
+\setcounter{questions}{0}
+
+% Save a question to a file, keep track of it in \questionindex file
+% arg #1  -  Question code
+% arg #2  -  Question search Index
+\newcommand{\SaveQuestion}[2]{
+    
+    % generate new index for question
+    \stepcounter{questions}
+
+    % write question code to “‹this file’s name without .tex›-question-‹question index›.tex”
+    \immediate\openout\question=\jobname-question-\thequestions
+    \immediate\write\question{\unexpanded{#1}}
+    \immediate\closeout\question
+
+    % write question index and search index to “‹this file’s name without .tex›-question-index”
+    \immediate\write\questionindex{\unexpanded{\InputIgnoreFirstArg}{#2}{\jobname-question-\thequestions}}
+}
+
+
+% Unfortunately the line with \write18 in the following command is not compatible with ExplSyntaxOn
+\ExplSyntaxOff
+
+% Call once after questions have been entered
+% Questions will then be output in the order defined by the sorting key
+\newcommand{\WriteQuestions}{
+    %    
+    % close output stream \questionindex
+    \immediate\closeout\questionindex%
+    %
+    % command (windows cmd): write sorted questions to new index file “‹this file’s name without .tex›-question-index-sorted.tex”
+    \immediate\write18{type ".\\Output\\\jobname-question-index.tex" | sort > ".\\Output\\\jobname-question-index-sorted.tex"}%
+    %
+    % read from new (sorted) index file
+    \input{\jobname-question-index-sorted}%
+
+    % comment this line to debug sorting
+    \CleanupQuestions
+}
+
+% delete all the files we gathered while saving the questions
+\newcommand{\CleanupQuestions}{%
+    \ifnum\thequestions>0
+        \foreach \index in {1,...,\thequestions}{%
+            \immediate\write18{del ".\\Output\\\jobname-question-\index.tex"}%
+        }
+        \immediate\write18{del ".\\Output\\\jobname-question-index.tex"}%
+        \immediate\write18{del ".\\Output\\\jobname-question-index-sorted.tex"}%
+        \setcounter{questions}{0}%
+    \fi%
+}
+
+% we turned that off just for the definitions above involving commandline stuff
+\ExplSyntaxOn
+
+
+\environbodyname\BODY@Question
+\NewEnviron{Question}[1]{
+    \expandafter\SaveQuestion\expandafter{\BODY@Question\ (#1) \newline}{#1}
+}
+
+
+\environbodyname\BODY
+\makeatother
+\ExplSyntaxOff
