@@ -1,41 +1,29 @@
-% ========================================
-% Some basic settings
-% ========================================
 \documentclass[a4paper]{article}
 
 \usepackage[left=1.5cm,right=1.5cm,bottom=2cm,top=2cm]{geometry}
 \usepackage[ngerman,shorthands=off]{babel}
-\usepackage{xcolor}
 \usepackage{hyperref}
-\hypersetup{
-    colorlinks,
-    allcolors=blue
-}
+    \hypersetup{colorlinks,allcolors=blue}
+\usepackage[default]{sourcesanspro}
+\usepackage[T1]{fontenc}
+
 
 \title{Klausurfragen vom 03.02.2025}
 \author{\href{https://github.com/minus-n/BiWi-Klausurzusammenfassung}{github/minus-n}}
 
-\usepackage[default]{sourcesanspro}
-\usepackage[T1]{fontenc}
 
 \input{style.tex}
 
-% ========================================
-% The actual document
-% ========================================
 
 \begin{document}
 
-% ========================================
-% Title and Table of Contents
-% ========================================
+    \maketitle
+    \newpage
+    
+    \hypertarget{tableofcontents}{}
+    \tableofcontents
+    \newpage
 
-\maketitle
-\newpage
-\hypertarget{tableofcontents}{}
-\tableofcontents
-\newpage
-
-\input{questions}
+    \input{questions}
 
 \end{document}
