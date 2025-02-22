@@ -16,7 +16,7 @@
 \newcommand{\InputIgnoreFirstArg}[2]{\input{#2}}
 
 % output streams for questions and the question index
-\newwrite\question
+\newwrite\write@question
 \newwrite\questionindex
 \immediate\openout\questionindex=\jobname-question-index
 
@@ -33,9 +33,9 @@
     \stepcounter{questions}
 
     % write question code to “‹this file’s name without .tex›-question-‹question index›.tex”
-    \immediate\openout\question=\jobname-question-\thequestions
-    \immediate\write\question{\unexpanded{#1}}
-    \immediate\closeout\question
+    \immediate\openout\write@question=\jobname-question-\thequestions
+    \immediate\write\write@question{\unexpanded{#1}}
+    \immediate\closeout\write@question
 
     % write question index and search index to “‹this file’s name without .tex›-question-index”
     \immediate\write\questionindex{\unexpanded{\InputIgnoreFirstArg}{#2}{\jobname-question-\thequestions}}
@@ -80,7 +80,7 @@
 
 \environbodyname\BODY@SortThisQuestion
 \NewEnviron{SortThisQuestion}[1]{
-    \expandafter\SaveQuestion\expandafter{\BODY@SortThisQuestion\ (#1) \newline}{#1}
+    \expandafter\SaveQuestion\expandafter{\BODY@SortThisQuestion}{#1}
 }
 
 
