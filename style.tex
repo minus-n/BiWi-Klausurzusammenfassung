@@ -51,18 +51,24 @@
 \newcommand{\wrong}{\defaultWrong}
 \newcommand{\unsure}{\defaultUnsure}
 
+\usepackage{environ}
+\makeatletter
+\environbodyname\BODY@question
+
 \setcounter{secnumdepth}{0}
-\newenvironment{question}[2]{%
+\NewEnviron{question}[2]{%
+    \begin{SortThisQuestion}{#1 (#2)}%
     \section[#1 \normalfont(#2)]{#1\\\small\normalfont\hyperlink{tableofcontents}{zurück zum Inhaltsverzeichnis}}%
-}{%
+    \expandafter{\BODY@question}
     \newpage%
+    \end{SortThisQuestion}%
 }
 
 \newcommand{\questiontext}[1]{\textbf{#1}}
 \newcommand{\assignment}[1]{\textbf{\textit{#1}}\newline}
 
-
-\newenvironment{multiple-choice}[1]{%
+\environbodyname\BODY@MultipleChoice
+\NewEnviron{multiple-choice}[1]{%
     \begin{question}{#1}{Multiple Choice}%
     \renewenvironment{answers}{%
         \begin{multiple-choice-list}}{\end{multiple-choice-list}%
@@ -70,15 +76,15 @@
     \renewcommand{\correct}{\ACorrectAnswer}%
     \renewcommand{\wrong}{\AWrongAnswer}%
     \renewcommand{\unsure}{\AnUnsureAnswer}%
-}%
-{%
+\BODY@MultipleChoice
     \renewcommand{\correct}{\defaultCorrect}%
     \renewcommand{\wrong}{\defaultWrong}%
     \renewcommand{\unsure}{\defaultUnsure}%
     \end{question}%
 }
 
-\newenvironment{single-choice}[1]{%
+\environbodyname\BODY@SingleChoice
+\NewEnviron{single-choice}[1]{%
     \begin{question}{#1}{Single Choice}%
     \renewenvironment{answers}{%
         \begin{single-choice-list}}{\end{single-choice-list}%
@@ -86,17 +92,21 @@
     \renewcommand{\correct}{\TheCorrectAnswer}%
     \renewcommand{\wrong}{\TheWrongAnswer}%
     \renewcommand{\unsure}{TheUnsureAnswer}%
-}{%
+    \BODY@SingleChoice
     \renewcommand{\correct}{\defaultCorrect}%
     \renewcommand{\wrong}{\defaultWrong}%
     \renewcommand{\unsure}{\defaultUnsure}%
     \end{question}%
 }
 
-\newenvironment{mapping}[1]{%
+\newcommand{\ismappedto}{\tcblower}
+\newenvironment{answer}{\begin{mapping-box}}{\end{mapping-box}}%
+\environbodyname\BODY@Mapping
+\NewEnviron{mapping}[1]{%
     \begin{question}{#1}{Zuordnungsaufgabe}%
-    \newcommand{\ismappedto}{\tcblower}%
-    \newenvironment{answer}{\begin{mapping-box}}{\end{mapping-box}}%
-}{%
+    \BODY@Mapping
     \end{question}%
 }
+
+\environbodyname\BODY
+\makeatother
