@@ -2,7 +2,6 @@
 
 
 % package imports
-\usepackage{xfp}
 \usepackage{enumitem}
 \usepackage{amssymb}
 \usepackage{pifont}
@@ -10,18 +9,20 @@
 \usepackage{graphicx}
 \usepackage{tcolorbox}
 \usepackage{environ}
+\usepackage{parskip}
 
 
 % get into "programming" mode
 \makeatletter
 
 
+% no section numbers
 \setcounter{secnumdepth}{0}
 
 
 % use these to typeset the question instrunctions
-\newcommand{\questiontext}[1]{\textbf{#1}}
-\newcommand{\assignment}[1]{\textbf{\textit{#1}}\newline}
+\newcommand{\questiontext}[1]{\textbf{#1}\par}
+\newcommand{\assignment}[1]{\textbf{\textit{#1}}\par}
 
 
 % this command will be called by the environments {single-choice}, {multiple-choice} and {mapping}
