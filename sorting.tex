@@ -3,6 +3,7 @@
 
 \usepackage{environ}
 \usepackage{pgffor}
+\usepackage{ifplatform}
 
 \ExplSyntaxOn
 \makeatletter
@@ -52,8 +53,12 @@
     % close output stream \questionindex
     \immediate\closeout\questionindex%
     %
-    % command (windows cmd): write sorted questions to new index file “‹this file’s name without .tex›-question-index-sorted.tex”
-    \immediate\write18{type ".\\Output\\\jobname-question-index.tex" | sort > ".\\Output\\\jobname-question-index-sorted.tex"}%
+    % command (windows or bash): write sorted questions to new index file “‹this file’s name without .tex›-question-index-sorted.tex”
+   	\ifwindows{%
+	    \immediate\write18{type ".\\Output\\\jobname-question-index.tex" | sort > ".\\Output\\\jobname-question-index-sorted.tex"}%
+	}\else{%
+		\immediate\write18{cat "./Output/\jobname-question-index.tex" | sort > "./Output/\jobname-question-index-sorted.tex"}%
+	}%
     %
     % read from new (sorted) index file
     \input{\jobname-question-index-sorted}%
@@ -66,10 +71,10 @@
 \newcommand{\CleanupQuestions}{%
     \ifnum\thequestions>0
         \foreach \index in {1,...,\thequestions}{%
-            \immediate\write18{del ".\\Output\\\jobname-question-\index.tex"}%
-        }
-        \immediate\write18{del ".\\Output\\\jobname-question-index.tex"}%
-        \immediate\write18{del ".\\Output\\\jobname-question-index-sorted.tex"}%
+            \immediate\write18{rm ".\\Output\\\jobname-question-\index.tex"}%
+        }%
+        \immediate\write18{rm ".\\Output\\\jobname-question-index.tex"}%
+        \immediate\write18{rm ".\\Output\\\jobname-question-index-sorted.tex"}%
         \setcounter{questions}{0}%
     \fi%
 }
