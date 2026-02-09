@@ -19,7 +19,7 @@
 % output streams for questions and the question index
 \newwrite\write@question
 \newwrite\questionindex
-\immediate\openout\questionindex=\jobname-question-index
+\immediate\openout\questionindex=\jobname-question-index.2sort
 
 % keep track of current question count
 \newcounter{questions}
@@ -34,12 +34,12 @@
     \stepcounter{questions}
 
     % write question code to “‹this file’s name without .tex›-question-‹question index›.tex”
-    \immediate\openout\write@question=\jobname-question-\thequestions
+    \immediate\openout\write@question=\jobname-\thequestions.question
     \immediate\write\write@question{\unexpanded{#1}}
     \immediate\closeout\write@question
 
     % write question index and search index to “‹this file’s name without .tex›-question-index”
-    \immediate\write\questionindex{\unexpanded{\InputIgnoreFirstArg}{#2}{\jobname-question-\thequestions}}
+    \immediate\write\questionindex{\unexpanded{\InputIgnoreFirstArg}{#2}{\jobname-\thequestions.question}}
 }
 
 
@@ -54,14 +54,14 @@
     \immediate\closeout\questionindex%
     %
     % command (windows or bash): write sorted questions to new index file “‹this file’s name without .tex›-question-index-sorted.tex”
-   	\ifwindows{%
-	    \immediate\write18{type ".\\Output\\\jobname-question-index.tex" | sort > ".\\Output\\\jobname-question-index-sorted.tex"}%
-	}\else{%
-		\immediate\write18{cat "./Output/\jobname-question-index.tex" | sort > "./Output/\jobname-question-index-sorted.tex"}%
-	}%
+%   	\ifwindows{%
+%	    \immediate\write18{type ".\\Output\\\jobname-question-index.tex" | sort > ".\\Output\\\jobname-question-index-sorted.tex"}%
+%	}\else{%
+%		\immediate\write18{cat "./Output/\jobname-question-index.tex" | sort > "./Output/\jobname-question-index-sorted.tex"}%
+%	}%
     %
     % read from new (sorted) index file
-    \input{\jobname-question-index-sorted}%
+    \input{\jobname-question-index.sorted}%
 
     % comment this line to debug sorting
     \CleanupQuestions
