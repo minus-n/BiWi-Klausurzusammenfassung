@@ -10,4 +10,6 @@ sub sortfilebylines {
 }
 
 # cleanup all files from compilation, when asked
-$clean_ext="%R-*.question %R-question-index.2sort %R-question-index.sorted %R-custom-index.tex"
+$clean_ext="%R-*.question %R-question-index.2sort %R-question-index.sorted %R-custom-index.tex";
+
+$pdf_mode =  1;

@@ -21,7 +21,10 @@
 
 
 % use these to typeset the question instrunctions
-\newcommand{\questiontext}[1]{\AddToIndex{tableofcontents}{\FirstSevenWords{#1}}\textbf{#1}\par}
+\newcommand{\questiontext}[1]{% text for currently unused indexing
+%	\AddToIndex{tableofcontents}{\FirstSevenWords{#1}}
+	\textbf{#1}\par%
+}
 \newcommand{\assignment}[1]{\textbf{\textit{#1}}\par}
 
 
